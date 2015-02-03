@@ -1,2 +1,2 @@
 # 2015-Robot
-Written and managed by Steve cox
+Written and managed by Steve Cox
