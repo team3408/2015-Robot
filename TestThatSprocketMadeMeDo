@@ -1,0 +1,138 @@
+#include "WPILib.h"
+
+class Robot: public IterativeRobot
+{
+
+	CANTalon fl;
+	CANTalon fr;
+	CANTalon bl;
+	CANTalon br;
+
+	RobotDrive myRobot; // robot drive system
+	Joystick stick; // only joystick
+	LiveWindow *lw;
+	int autoLoopCounter;
+	float PI = 3.14159265;
+
+public:
+	Robot() :
+		fl(10),
+		fr(12),
+		bl(11),
+		br(13),
+		myRobot(0, 1),	// these must be initialized in the same order
+		stick(0),		// as they are declared above.
+		lw(NULL),
+		autoLoopCounter(0)
+	{
+		myRobot.SetExpiration(0.1);
+	}
+
+private:
+	void RobotInit()
+	{
+		lw = LiveWindow::GetInstance();
+	}
+
+	void AutonomousInit()
+	{
+		autoLoopCounter = 0;
+	}
+
+	void AutonomousPeriodic()
+	{
+		if(autoLoopCounter < 100) //Check if we've completed 100 loops (approximately 2 seconds)
+		{
+			myRobot.Drive(-0.5, 0.0); 	// drive forwards half speed
+			autoLoopCounter++;
+			} else {
+			myRobot.Drive(0.0, 0.0); 	// stop robot
+		}
+	}
+
+	void TeleopInit()
+	{
+
+	}
+
+	void TeleopPeriodic()
+	{
+		float DL = stick.GetRawAxis(1);
+		float DR = stick.GetRawAxis(3);
+
+
+		bool five = stick.GetRawButton(5);
+		bool six = stick.GetRawButton(6);
+		bool seven = stick.GetRawButton(7);
+		bool eight = stick.GetRawButton(8);
+		if (five){
+			DL = DL*DL*DL;
+			DR = DR*DR*DR;
+
+		}
+		else if (six){
+			if (DL >0 && DR > 0){
+					DL = DL*DL;
+					DR = DR*DR;
+			}
+			else if (DL>0 && DR <0){
+				DL = DL*DL;
+				DR = -1*DR*DR;
+			}
+			else if(DL<0 && DR >0){
+				DL = -1*DL*DL;
+				DR = DR*DR;
+
+			}
+			else if (DL<0 && DR<0){
+				DL = -1*DL*DL;
+				DR = -1*DR*DR;
+			}
+			else if (DL == 0 && DR > 0){
+				DL = 0;
+				DR = DR*DR;
+			}
+			else if (DL == 0 && DR < 0){
+				DL  = 0;
+				DR = -1*DR*DR;
+			}
+			else if (DL > 0 && DR == 0){
+				DL = DL*DL;
+				DR = 0;
+			}
+			else if (DL < 0 && DR == 0){
+				DL = -1*DL*DL;
+				DR = 0;
+
+			}
+			else if (DL == 0 && DR == 0){
+				DL = 0;
+				DR = 0;
+			}
+
+		}
+		else if (seven){
+			DL = tan(PI*DL/4);
+			DR = tan(DR*PI/4);
+		}
+		else if (eight){
+			DL = DL*DL*DL*DL*DL;
+			DR = DR*DR*DR*DR*DR;
+
+		}
+
+
+
+		fl.Set(-DL);
+		fr.Set(DR);
+		bl.Set(-DL);
+		br.Set(DR);
+	}
+
+	void TestPeriodic()
+	{
+		lw->Run();
+	}
+};
+
+START_ROBOT_CLASS(Robot);
