@@ -1,0 +1,188 @@
+#include "WPILib.h"
+#include <iostream>
+
+using namespace std;
+
+class Robot: public IterativeRobot
+{
+	CANTalon fl;
+	CANTalon fr;
+	CANTalon bl;
+	CANTalon br;
+	CANTalon leftCrateWheel;
+	CANTalon rightCrateWheel;
+	CANTalon flag;
+	RobotDrive myRobot; // robot drive system
+	Joystick drivestick; // only joystick
+	Joystick buttonstick;
+	DigitalInput *lswitchfront;
+	DigitalInput *lswitchback;
+	bool switchTest;
+	LiveWindow *lw;
+	int autoLoopCounter;
+
+public:
+	Robot() :
+		fl(56),
+		fr(52),
+		bl(57),
+		br(53),
+		leftCrateWheel(14),
+		rightCrateWheel (15),
+		flag(1),
+		myRobot(10, 11),	// these must be initialized in the same order
+		drivestick(1),	// as they are declared above.
+		buttonstick(0),
+		lw(NULL),
+		autoLoopCounter(0)
+	{
+		myRobot.SetExpiration(0.1);
+	}
+
+private:
+	void RobotInit()
+	{
+
+		lswitchfront = new DigitalInput(0);
+		lswitchback = new DigitalInput(1);
+		lw = LiveWindow::GetInstance();
+	}
+
+	void AutonomousInit()
+	{
+		autoLoopCounter = 0;
+	}
+
+void AutonomousPeriodic()
+{
+
+			if(autoLoopCounter < 150) //go forward just to auto zone
+			{
+
+				fl.Set(.25,0.0);
+				fr.Set(-.25,0.0);
+				bl.Set(.25,0.0);
+				br.Set(-.25,0.0);
+				autoLoopCounter++;
+			}
+
+			else if (autoLoopCounter > 150 && autoLoopCounter < 180){
+				fl.Set(.5,0.0);
+				fr.Set(.5,0.0);
+				bl.Set(.5,0.0);
+				br.Set(.5,0.0);
+				autoLoopCounter++;
+			}
+
+			else if (autoLoopCounter >180 && autoLoopCounter <300){
+				fl.Set(.25,0.0);
+				fr.Set(-.25,0.0);
+				bl.Set(.25,0.0);
+				br.Set(-.25,0.0);
+				autoLoopCounter++;
+			}
+
+			else {
+				fl.Set(0,0.0);
+				fr.Set(0,0.0);
+				bl.Set(0,0.0);
+				br.Set(0,0.0);
+				autoLoopCounter++;
+			}
+
+
+
+}
+	void TeleopInit()
+	{
+
+	}
+
+	void TeleopPeriodic()
+	{
+		float driveLeft = drivestick.GetRawAxis(1);
+		float driveRight = drivestick.GetRawAxis(3);
+		driveLeft = driveLeft/2;
+		driveRight = driveRight/2;
+		bool fast = drivestick.GetRawButton(6);
+		bool slow = drivestick.GetRawButton(5);
+		bool SF = buttonstick.GetRawButton(5);
+		bool SB = buttonstick.GetRawButton(6);
+//		bool wheelsIn = buttonstick.GetRawButton(2);
+//		bool wheelsOut = buttonstick.GetRawButton(4);
+		float wheelsAxisL = buttonstick.GetRawAxis(1);
+		float wheelsAxisR = buttonstick.GetRawAxis(3);
+		wheelsAxisL = wheelsAxisL/4;
+		wheelsAxisR = wheelsAxisR/4;
+
+		//the variable that controls the speed of the fifth motor
+		int switchNumber;
+//		float spinNumber;
+
+/*		if(wheelsIn){
+			spinNumber = .25;
+		}
+
+		else if (wheelsOut){
+			spinNumber = -.25;
+		}
+
+		else {
+			spinNumber = 0;
+		}*/
+
+		if (fast){
+			driveLeft = driveLeft*2;
+			driveRight = driveRight*2;
+		}
+		else if (slow){
+			driveLeft = driveLeft/2;
+			driveRight = driveRight/2;
+		}
+		//check to see that the limit switch is on.
+		if (lswitchfront->Get() == 1 && lswitchback->Get() == 0){
+			switchNumber = 1;
+			switchTest = true;
+			cout << "The front switch is pressed";
+
+		}
+		else if (lswitchback->Get() == 1 && lswitchfront->Get() == 0){
+			switchNumber = 1;
+			switchTest = true;
+			cout << "The switch is pressed";
+		}
+		else if(lswitchfront->Get() == 1 && lswitchback->Get() == 1){
+			switchNumber = 0;
+			switchTest = true;
+			cout << "Both switches are being pressed";
+		}
+		else if (SF){
+			switchNumber = 1;
+		}
+		else if (SB){
+			switchNumber = -1;
+		}
+		else  {
+			switchNumber = 0;
+			switchTest = false;
+			cout<< "Neither switch is pressed";
+
+		}
+
+		leftCrateWheel.Set(-wheelsAxisL);
+		rightCrateWheel.Set(wheelsAxisR);
+		flag.Set(switchNumber);
+		fl.Set(-driveLeft);
+		fr.Set(driveRight);
+		bl.Set(-driveLeft);
+		br.Set(driveRight);
+
+	}
+
+	void TestPeriodic()
+	{
+		lw->Run();
+	}
+};
+
+START_ROBOT_CLASS(Robot);
