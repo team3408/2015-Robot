@@ -1,0 +1,10 @@
+get input from axis on drive joystick
+divide by a number to set a base speed
+
+set up buttons for fast and slow
+
+if statements for the buttons pressed
+
+if buttons for limit switches that help setup the motor values
+
+set values to each motor individually
