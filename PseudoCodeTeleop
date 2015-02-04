@@ -1,10 +1,16 @@
 get input from axis on drive joystick
 divide by a number to set a base speed
 
-set up buttons for fast and slow
+get input from axis on button stick
+divide by a number to set a base speed
 
-if statements for the buttons pressed
+set up buttons for fast and slow on driving stick
 
-if buttons for limit switches that help setup the motor values
+set up axes to pick up bin/tote on button stick
 
-set values to each motor individually
+if statements for the buttons pressed to change speed
+
+{{{{I don't know about this}}}} if buttons for limit switches that help setup the motor values if we hit a wall
+
+set values to each drive motor individually
+set the same value for each claw of doom
