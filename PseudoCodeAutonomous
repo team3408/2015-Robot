@@ -1,0 +1,19 @@
+//just drive forward
+
+//pick up tote and head to auto zone
+    pick up tote
+    pivot 90 degrees
+    drive forward
+
+//pick up tote and bin
+    pick up bin
+    drive forward
+    pick up tote
+    pivot 90
+    drive forward
+
+//pick up bin
+    pick up bin
+    pivot 90
+    drive forward
+
