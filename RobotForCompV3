@@ -87,18 +87,18 @@ private:
 	{
 		//variables that control the speed of the motors on each side, because we are running tank drive, we only need two
 		float driveLeft = driveStick.GetRawAxis(1);
-		float driveRight = driveStick.GetRawAxis(5);
+		float driveRight = driveStick.GetRawAxis(3);
 
 		driveLeft = driveLeft/2;
 		driveRight = driveRight/2;
 
-    float clawMoveLeft = buttonStick.GetRawAxis(2);
+    float clawMoveLeft = buttonStick.GetRawAxis(1);
     float clawMoveRight = buttonStick.GetRawAxis(3);
 		
 
 		//true or false variables that allow us to change the speed when the buttons are held down
-		bool slow = driveStick.GetRawButton(4);
-		bool fast = driveStick.GetRawButton(5);
+		bool slow = driveStick.GetRawButton(5);
+		bool fast = driveStick.GetRawButton(6);
 
 		//an if, else if statement that controls when the boolean buttons are pressed so that we can change the driving speeds
 		if (slow){
@@ -115,10 +115,10 @@ private:
 		  clawMoveLeft = 0;
 		  clawMoveRight = .25;
 		}
-    else if (topLeftSwitch->Get() == 0 && topRightSwitch->Get() == 1) {
-      clawMoveLeft = .25;
-      clawMoveRight = 0;
-    }
+		 else if (topLeftSwitch->Get() == 0 && topRightSwitch->Get() == 1) {
+			clawMoveLeft = .25;
+			clawMoveRight = 0;
+		 }
 		else if (topLeftSwitch->Get() == 1 && topRightSwitch->Get() == 1){
 		  clawMoveLeft = 0;
 		  clawMoveRight = 0;
