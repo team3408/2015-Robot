@@ -1,3 +1,6 @@
+/********************************************THIS CODE USES OUR NEW CONTROLLERS********************************************/
+
+
 #include "WPILib.h"
 
 class Robot: public IterativeRobot
@@ -84,18 +87,18 @@ private:
 	{
 		//variables that control the speed of the motors on each side, because we are running tank drive, we only need two
 		float driveLeft = driveStick.GetRawAxis(1);
-		float driveRight = driveStick.GetRawAxis(3);
+		float driveRight = driveStick.GetRawAxis(5);
 
 		driveLeft = driveLeft/2;
 		driveRight = driveRight/2;
 
-    float clawMoveLeft = buttonStick.GetRawAxis(1);
+    float clawMoveLeft = buttonStick.GetRawAxis(2);
     float clawMoveRight = buttonStick.GetRawAxis(3);
 		
 
 		//true or false variables that allow us to change the speed when the buttons are held down
-		bool slow = driveStick.GetRawButton(5);
-		bool fast = driveStick.GetRawButton(6);
+		bool slow = driveStick.GetRawButton(4);
+		bool fast = driveStick.GetRawButton(5);
 
 		//an if, else if statement that controls when the boolean buttons are pressed so that we can change the driving speeds
 		if (slow){
