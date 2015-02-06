@@ -2,6 +2,8 @@
 
 
 #include "WPILib.h"
+#include <iostream>
+#include <math.h>
 
 class Robot: public IterativeRobot
 {
@@ -10,32 +12,28 @@ class Robot: public IterativeRobot
   DigitalInput *bottomLeftSwitch;
   DigitalInput *topRightSwitch;
   DigitalInout *bottomRightSwitch;
-  
-	//list of motors being used for driving
-	CANTalon frontLeftDrive;
-	CANTalon frontRightDrive;
-	CANTalon backLeftDrive;
-	CANTalon backRightDrive;
+  //list of motors being used for driving
+  CANTalon frontLeftDrive;
+  CANTalon frontRightDrive;
+  CANTalon backLeftDrive;
+  CANTalon backRightDrive;
   
   //list of motors on claws of doom
   CANTalon leftClaw;
   CANTalon rightClaw;
-	//the variable that controls the robot drive
-	RobotDrive myRobot; // robot drive system
-
-	//2 joysticks are used in competition
-	Joystick buttonStick;
-	Joystick driveStick; 
-
-
-	LiveWindow *lw;
-	int autoLoopCounter;
+  //the variable that controls the robot drive
+  RobotDrive myRobot; // robot drive system
+  //2 joysticks are used in competition
+  Joystick buttonStick;
+  Joystick driveStick; 
+  LiveWindow *lw;
+  int autoLoopCounter;
 
 public:
 	Robot() :
 		//use commas here and initiate them in the same order as above
-		frontLeftDrive(56), //56
-		frontRightDrive(52), //52
+		frontLeftDrive(56), 
+		frontRightDrive(52), 
 		backLeftDrive(57),
 		backRightDrive(53),
 		leftClaw(),
@@ -57,9 +55,9 @@ private:
 	{
 	  topLeftSwitch = new DigitalInput(0);
 	  bottomLeftSwitch = new DigitalInput(1);
-		topRightSwitch = new DigitalInput(2);
-		bottomRightSwitch = new DigitalInput(3);
-		lw = LiveWindow::GetInstance();
+	  topRightSwitch = new DigitalInput(2);
+	  bottomRightSwitch = new DigitalInput(3);
+	  lw = LiveWindow::GetInstance();
 	}
 
 	void AutonomousInit()
