@@ -1,0 +1,283 @@
+/********************************************THIS CODE USES OUR NEW CONTROLLERS********************************************/
+
+
+#include "WPILib.h"
+#include <iostream>
+#include <math.h>
+
+class Robot: public IterativeRobot
+{
+  //Solenoids to push the bins out of the robot
+  DoubleSolenoid solenoid1;
+  DoubleSolenoid Solenoid2;
+  
+  //limitswitches for linear lift
+  DigitalInput *topLeftSwitch;
+  DigitalInput *bottomLeftSwitch;
+  DigitalInput *topRightSwitch;
+  DigitalInput *bottomRightSwitch;
+  //list of motors being used for driving
+  CANTalon frontLeftDrive;
+  CANTalon frontRightDrive;
+  CANTalon backLeftDrive;
+  CANTalon backRightDrive;
+
+  //list of motors on claws of doom
+  CANTalon leftClaw;
+  CANTalon rightClaw;
+  //the variable that controls the robot drive
+  RobotDrive myRobot; // robot drive system
+  //2 joysticks are used in competition
+  Joystick buttonStick;
+  Joystick driveStick;
+  LiveWindow *lw;
+  int autoLoopCounter;
+
+public:
+	Robot() :
+		//use commas here and initiate them in the same order as above
+		solenoid1(1,2),
+		solenoid2(5,6),
+		frontLeftDrive(56),
+		frontRightDrive(52),
+		backLeftDrive(57),
+		backRightDrive(53),
+		leftClaw(),
+		rightClaw(),
+		myRobot(0, 1),
+
+		buttonStick(0),
+		driveStick(1),
+
+		lw(NULL),
+		autoLoopCounter(0)
+
+	{
+		myRobot.SetExpiration(0.1);
+	}
+
+private:
+	void RobotInit()
+	{
+	  topLeftSwitch = new DigitalInput(0);
+	  bottomLeftSwitch = new DigitalInput(1);
+	  topRightSwitch = new DigitalInput(2);
+	  bottomRightSwitch = new DigitalInput(3);
+	  lw = LiveWindow::GetInstance();
+	}
+
+	void AutonomousInit()
+	{
+		autoLoopCounter = 0;
+
+	}
+
+	void AutonomousPeriodic()
+	{
+		//just drive forward
+		if (autoLoopCounter < time){
+			frontLeftDrive.Set(-.25);
+			frontRightDrive.Set(.25);
+			backLeftDrive.Set(.25);
+			backRightDrive.Set(-.25);
+			autoLoopCounter++;
+		}
+		else{
+			frontLeftDrive.Set(0);
+			frontRightDrive.Set(0);
+			backLeftDrive.Set(0);
+			backRightDrive.Set(0);
+			autoLoopCounter++;
+		}
+
+		//pick up tote and head to auto zone OR pick up bin and head to auto zone
+		if (autoLoopCounter < time){
+			leftClaw(.25);
+			rightClaw(.25);
+			frontLeftDrive.Set(0);
+			frontRightDrive.Set(0);
+			backLeftDrive.Set(0);
+			backRightDrive.Set(0);
+			autoLoopCounter++;
+		}
+		else if (autoLoopCounter >= time && autoLoopCounter <time){
+			leftClaw(0);
+			rightClaw(0);
+			frontLeftDrive.Set(.25);
+			frontRightDrive.Set(.25);
+			backLeftDrive.Set(.25);
+			backRightDrive.Set(.25);
+			autoLoopCounter++;
+		}
+		else if (autoLoopCounter >= time && autoLoopCounter < time){
+			leftClaw(-.25);
+			rightClaw(-.25);
+			frontLeftDrive.Set(0);
+			frontRightDrive.Set(0);
+			backLeftDrive.Set(0);
+			backRightDrive.Set(0);
+			autoLoopCounter++;
+		}
+		else if (autoLoopCounter >= time && autoLoopCounter < time){
+			leftClaw(.25);
+			rightClaw(.25);
+			frontLeftDrive.Set(0);
+			frontRightDrive.Set(0);
+			backLeftDrive.Set(0);
+			backRightDrive.Set(0);
+			autoLoopCounter++;
+		}
+		else if (autoLoopCounter >= time && autoLoopCounter < time){
+			leftClaw(0);
+			rightClaw(0);
+			frontLeftDrive.Set(.25);
+			frontRightDrive.Set(.25);
+			backLeftDrive.Set(.25);
+			backRightDrive.Set(.25);
+			autoLoopCounter++;
+		}
+		else if (autoLoopCounter >= time && autoLoopCounter <time){
+			leftClaw(0);
+			rightClaw(0);
+			frontLeftDrive.Set(-.25);
+			frontRightDrive.Set(.25);
+			backLeftDrive.Set(.25);
+			backRightDrive.Set(-.25);
+			autoLoopCounter++;
+		}
+
+		//pick up tote and bin
+		if (autoLoopCounter < time){
+			leftClaw(.25);
+			rightClaw(.25);
+			frontLeftDrive.Set(0);
+			frontRightDrive.Set(0);
+			backLeftDrive.Set(0);
+			backRightDrive.Set(0);
+			autoLoopCounter++;
+		}
+		else if (autoLoopCounter >= time && autoLoopCounter < time){
+			leftClaw(0);
+			rightClaw(0);
+			frontLeftDrive.Set(.25);
+			frontRightDrive.Set(.25);
+			backLeftDrive.Set(.25);
+			backRightDrive.Set(.25);
+			autoLoopCounter++;
+		}
+		else if (autoLoopCounter >= time && autoLoopCounter <time){
+			leftClaw(0);
+			rightClaw(0);
+			frontLeftDrive.Set(-.25);
+			frontRightDrive.Set(.25);
+			backLeftDrive.Set(.25);
+			backRightDrive.Set(-.25);
+			autoLoopCounter++;
+		}
+
+	}
+
+	void TeleopInit()
+	{
+
+	}
+
+	void TeleopPeriodic()
+	{
+		//variables that control the speed of the motors on each side, because we are running tank drive, we only need two
+		float driveLeft = driveStick.GetRawAxis(1);
+		float driveRight = driveStick.GetRawAxis(3);
+
+		driveLeft = driveLeft/2;
+		driveRight = driveRight/2;
+
+    float clawMoveLeft = buttonStick.GetRawAxis(1);
+    float clawMoveRight = buttonStick.GetRawAxis(3);
+
+    //true or false to push the  solenoids in or out
+    if(buttonStick.GetRawButton(7)){
+      solenoid1.Set(DoubleSolenoid::kForward);
+      solenoid2.Set(DoubleSolenoid::kForward);
+    }
+    else if (buttonStick.GetRawButton(8)){
+      solenoid1.Set(DoubleSolenoid::kReverse);
+      solenoid2.Set(DoubleSolenoid::kReverse);
+    }
+    else {
+      solenoid1.Set(DoubleSolenoid::kOff);
+      solenoid2.Set(DoubleSolenoid::kOff);
+    }
+    
+		//true or false variables that allow us to change the speed when the buttons are held down
+		bool slow = driveStick.GetRawButton(5);
+		bool fast = driveStick.GetRawButton(6);
+
+		//an if, else if statement that controls when the boolean buttons are pressed so that we can change the driving speeds
+		if (slow){
+			driveLeft = driveLeft/2;
+			driveRight = driveRight/2;
+		}
+		else if (fast){
+			driveLeft = driveLeft*2;
+			driveRight = driveRight*2;
+		}
+
+		//if statement for the limitswitches
+		if (topLeftSwitch->Get() == 1 && topRightSwitch->Get() == 0){
+		  clawMoveLeft = 0;
+		  clawMoveRight = .25;
+		}
+		 else if (topLeftSwitch->Get() == 0 && topRightSwitch->Get() == 1) {
+			clawMoveLeft = .25;
+			clawMoveRight = 0;
+		 }
+		else if (topLeftSwitch->Get() == 1 && topRightSwitch->Get() == 1){
+		  clawMoveLeft = 0;
+		  clawMoveRight = 0;
+		  Wait(0.005);
+		  clawMoveLeft = -.25;
+		  clawMoveRight = -.25;
+		  Wait(0.005);
+		  clawMoveLeft = 0;
+		  clawMoveRight = 0;
+		}
+		else if (bottomLeftSwitch->Get() == 1 && bottomRightSwitch->Get() == 0){
+		  clawMoveLeft = 0;
+		  clawMoveRight = -.25;
+		}
+    else if (bottomLeftSwitch->Get() == 0 && bottomRightSwitch->Get() == 1) {
+      clawMoveLeft = -.25;
+      clawMoveRight = 0;
+    }
+		else if (bottomLeftSwitch->Get() == 1 && bottomRightSwitch->Get() == 1){
+		  clawMoveLeft = 0;
+		  clawMoveRight = 0;
+		  Wait(0.005);
+		  clawMoveLeft = .25;
+		  clawMoveRight = .25;
+		  Wait(0.005);
+		  clawMoveLeft = 0;
+		  clawMoveRight = 0;
+		}
+
+
+		//individually set all the motors with values because we do not have chains so we can't use the tank drive functions
+		frontLeftDrive.Set(-driveLeft);
+		frontRightDrive.Set(driveRight);
+		backLeftDrive.Set(driveLeft);
+		backRightDrive.Set(-driveRight);
+
+  //set values of claw motors so that they can be controlled independently
+  /*****************************************ONE OF THESE WILL HAVE TO BE NEGATIVE*****************************************/
+  leftClaw.Set(clawMoveLeft);
+  rightClaw.Set(clawMoveRight);
+
+	}
+
+	void TestPeriodic()
+	{
+		lw->Run();
+	}
+};
+
+START_ROBOT_CLASS(Robot);
