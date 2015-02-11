@@ -162,6 +162,24 @@ private:
 			backRightDrive.Set(-.25);
 			autoLoopCounter++;
 		}
+		//push out solenoid pistons
+		else if (autoLoopCounter >= time && autoLoopCounter < time){
+			solenoid1.Set(DoubleSolenoid::kForward);
+			solenoid2.Set(DoubleSolenoid::kForward);
+			autoLoopCounter++;
+		}
+		//sit still
+		else {
+			solenoid1.Set(DoubleSolenoid::kOff);
+			solenoid2.Set(DoubleSolenoid::kOff);
+			leftClaw(0);
+			rightClaw(0);
+			frontLeftDrive.Set(0);
+			frontRightDrive.Set(0);
+			backLeftDrive.Set(0);
+			backRightDrive.Set(0);
+			autoLoopCounter++;
+		}
 
 		/***************************************THIRD FUNCTION**********************************************/
 		//pick up tote or bin
@@ -202,6 +220,24 @@ private:
 			frontRightDrive.Set(.25);
 			backLeftDrive.Set(.25);
 			backRightDrive.Set(-.25);
+			autoLoopCounter++;
+		}
+		//push out solenoid pistons
+		else if (autoLoopCounter >= time && autoLoopCounter < time){
+			solenoid1.Set(DoubleSolenoid::kForward);
+			solenoid2.Set(DoubleSolenoid::kForward);
+			autoLoopCounter++;
+		}
+		//sit still
+		else {
+			solenoid1.Set(DoubleSolenoid::kOff);
+			solenoid2.Set(DoubleSolenoid::kOff);
+			leftClaw(0);
+			rightClaw(0);
+			frontLeftDrive.Set(0);
+			frontRightDrive.Set(0);
+			backLeftDrive.Set(0);
+			backRightDrive.Set(0);
 			autoLoopCounter++;
 		}
 
