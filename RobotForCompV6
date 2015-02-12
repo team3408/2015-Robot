@@ -139,16 +139,6 @@ private:
   			backRightDrive.Set(0);
   			autoLoopCounter++;
   		}
-  		//pick up slightly to get over lip
-  		else if (autoLoopCounter >= claws && autoLoopCounter < claws){
-  			leftClaw.Set(-.25);
-  			rightClaw.Set(-.25);
-  			frontLeftDrive.Set(0);
-  			frontRightDrive.Set(0);
-  			backLeftDrive.Set(0);
-  			backRightDrive.Set(0);
-  			autoLoopCounter++;
-  		}
   		//drive forward
   		else if (autoLoopCounter >= claws && autoLoopCounter < driveForwardShort){
   			leftClaw.Set(0);
@@ -163,6 +153,16 @@ private:
   		else if (autoLoopCounter >= driveForwardShort && autoLoopCounter < claws){
   			leftClaw(.25);
   			rightClaw(.25);
+  			frontLeftDrive.Set(0);
+  			frontRightDrive.Set(0);
+  			backLeftDrive.Set(0);
+  			backRightDrive.Set(0);
+  			autoLoopCounter++;
+  		}
+  		//pick up tote
+  		else if (autoLoopCounter >= claws && autoLoopCounter < claws){
+  			leftClaw.Set(-.25);
+  			rightClaw.Set(-.25);
   			frontLeftDrive.Set(0);
   			frontRightDrive.Set(0);
   			backLeftDrive.Set(0);
