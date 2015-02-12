@@ -85,7 +85,7 @@ private:
 	{
 		/**************************************FIRST FUNCTION******************************************/
 		//just drive forward
-		if (autoLoopCounter < time){
+		if (autoLoopCounter < timeToDrive){
 			frontLeftDrive.Set(-.25);
 			frontRightDrive.Set(.25);
 			backLeftDrive.Set(.25);
@@ -103,7 +103,7 @@ private:
 		/********************************SECOND FUNCTION**********************************************/
 		//pick up tote and bin
 		//pick up
-		if (autoLoopCounter < time){
+		if (autoLoopCounter < timeToLift){
 			leftClaw.Set(.25);
 			rightClaw.Set(.25);
 			frontLeftDrive.Set(0);
@@ -113,7 +113,7 @@ private:
 			autoLoopCounter++;
 		}
 		//pick up slightly to get over lip
-		else if (autoLoopCounter >= time && autoLoopCounter < time){
+		else if (autoLoopCounter >= timeToLift && autoLoopCounter < timeToPickUp){
 			leftClaw.Set(-.25);
 			rightClaw.Set(-.25);
 			frontLeftDrive.Set(0);
@@ -123,7 +123,7 @@ private:
 			autoLoopCounter++;
 		}
 		//drive forward
-		else if (autoLoopCounter >= time && autoLoopCounter <time){
+		else if (autoLoopCounter >= timeToPickUp && autoLoopCounter <timeToDriveForward){
 			leftClaw.Set(0);
 			rightClaw.Set(0);
 			frontLeftDrive.Set(-.25);
@@ -133,7 +133,7 @@ private:
 			autoLoopCounter++;
 		}
 		//move down over second item
-		else if (autoLoopCounter >= time && autoLoopCounter < time){
+		else if (autoLoopCounter >= timeToDriveForward && autoLoopCounter < timeToMoveDown){
 			leftClaw(.25);
 			rightClaw(.25);
 			frontLeftDrive.Set(0);
@@ -143,7 +143,7 @@ private:
 			autoLoopCounter++;
 		}
 		//pivot
-		else if (autoLoopCounter >= time && autoLoopCounter < time){
+		else if (autoLoopCounter >= timeToMoveDown && autoLoopCounter < timeToPivot){
 			leftClaw(0);
 			rightClaw(0);
 			frontLeftDrive.Set(.25);
@@ -153,7 +153,7 @@ private:
 			autoLoopCounter++;
 		}
 		//drive forward
-		else if (autoLoopCounter >= time && autoLoopCounter <time){
+		else if (autoLoopCounter >= timeToPivto && autoLoopCounter <timeToDrive){
 			leftClaw(0);
 			rightClaw(0);
 			frontLeftDrive.Set(-.25);
@@ -162,16 +162,18 @@ private:
 			backRightDrive.Set(-.25);
 			autoLoopCounter++;
 		}
-		//push out solenoid pistons
-		else if (autoLoopCounter >= time && autoLoopCounter < time){
-			solenoid1.Set(DoubleSolenoid::kForward);
-			solenoid2.Set(DoubleSolenoid::kForward);
+		//drop stuff
+		else if (autoLoopCounter >= timeToDrive && autoLoopCounter < timeToDrop){
+			leftClaw(-.25);
+			rightClaw(-.25);
+			frontLeftDrive.Set(0);
+			frontRightDrive.Set(0);
+			backLeftDrive.Set(0);
+			backRightDrive.Set(0);
 			autoLoopCounter++;
 		}
 		//sit still
 		else {
-			solenoid1.Set(DoubleSolenoid::kOff);
-			solenoid2.Set(DoubleSolenoid::kOff);
 			leftClaw(0);
 			rightClaw(0);
 			frontLeftDrive.Set(0);
@@ -182,7 +184,7 @@ private:
 		}
 
 		/***************************************THIRD FUNCTION**********************************************/
-		//pick up tote or bin
+		//pick up tote and bring to auto zone
 		if (autoLoopCounter < time){
 			leftClaw(.25);
 			rightClaw(.25);
@@ -222,16 +224,18 @@ private:
 			backRightDrive.Set(-.25);
 			autoLoopCounter++;
 		}
-		//push out solenoid pistons
-		else if (autoLoopCounter >= time && autoLoopCounter < time){
-			solenoid1.Set(DoubleSolenoid::kForward);
-			solenoid2.Set(DoubleSolenoid::kForward);
+		//drop stuff
+		else if (autoLoopCounter >= timeToDrive && autoLoopCounter < timeToDrop){
+			leftClaw(-.25);
+			rightClaw(-.25);
+			frontLeftDrive.Set(0);
+			frontRightDrive.Set(0);
+			backLeftDrive.Set(0);
+			backRightDrive.Set(0);
 			autoLoopCounter++;
 		}
 		//sit still
 		else {
-			solenoid1.Set(DoubleSolenoid::kOff);
-			solenoid2.Set(DoubleSolenoid::kOff);
 			leftClaw(0);
 			rightClaw(0);
 			frontLeftDrive.Set(0);
@@ -240,7 +244,67 @@ private:
 			backRightDrive.Set(0);
 			autoLoopCounter++;
 		}
-
+/***************************************FOURTH FUNCTION**********************************************/
+		//pick up bin and bring to auto zone
+		if (autoLoopCounter < time){
+			leftClaw(.25);
+			rightClaw(.25);
+			frontLeftDrive.Set(0);
+			frontRightDrive.Set(0);
+			backLeftDrive.Set(0);
+			backRightDrive.Set(0);
+			autoLoopCounter++;
+		}
+		//pick up
+		else if (autoLoopCounter >= time && autoLoopCounter < time){
+			leftClaw(-.25);
+			rightClaw(-.25);
+			frontLeftDrive.Set(0);
+			frontRightDrive.Set(0);
+			backLeftDrive.Set(0);
+			backRightDrive.Set(0);
+			autoLoopCounter++;
+		}
+		//pivot
+		else if (autoLoopCounter >= time && autoLoopCounter < time){
+			leftClaw(0);
+			rightClaw(0);
+			frontLeftDrive.Set(-.25);
+			frontRightDrive.Set(-.25);
+			backLeftDrive.Set(-.25);
+			backRightDrive.Set(-.25);
+			autoLoopCounter++;
+		}
+		//drive forward
+		else if (autoLoopCounter >= time && autoLoopCounter <time){
+			leftClaw(0);
+			rightClaw(0);
+			frontLeftDrive.Set(-.25);
+			frontRightDrive.Set(.25);
+			backLeftDrive.Set(.25);
+			backRightDrive.Set(-.25);
+			autoLoopCounter++;
+		}
+		//drop stuff
+		else if (autoLoopCounter >= timeToDrive && autoLoopCounter < timeToDrop){
+			leftClaw(-.25);
+			rightClaw(-.25);
+			frontLeftDrive.Set(0);
+			frontRightDrive.Set(0);
+			backLeftDrive.Set(0);
+			backRightDrive.Set(0);
+			autoLoopCounter++;
+		}
+		//sit still
+		else {
+			leftClaw(0);
+			rightClaw(0);
+			frontLeftDrive.Set(0);
+			frontRightDrive.Set(0);
+			backLeftDrive.Set(0);
+			backRightDrive.Set(0);
+			autoLoopCounter++;
+		}
 	}
 
 	void TeleopInit()
