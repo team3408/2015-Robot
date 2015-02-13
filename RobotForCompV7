@@ -365,7 +365,8 @@ private:
 		//allows us to control the claws using axes so that we have manual control over them
 		float pusherMove = buttonStick.GetRawAxis(1);
 		float clawMove = buttonStick.GetRawAxis(3);
-
+		float clawMoveLeft;
+		float clawMoveRight;
 		//true or false variables that allow us to change the speed when the buttons are held down
 		bool slow = driveStick.GetRawButton(5);
 		bool fast = driveStick.GetRawButton(6);
@@ -381,7 +382,7 @@ private:
 		}
 
   //if satement for controlling string mechanism
-/*		//if statement for the limit switches that make sure that all ball screws are moving at the same rate
+		//if statement for the limit switches that make sure that all ball screws are moving at the same rate
 		if (topLeftSwitch->Get() == 1 && topRightSwitch->Get() == 0){
 			clawMoveLeft = 0;
 			clawMoveRight = .25;
@@ -429,10 +430,12 @@ private:
   //sets value of string motor
     stickMotor.Set(pusherMove);
     
+    		clawMoveLeft = -clawMove;
+    		clawMoveRight = clawMove;
 		//set values of claw motors so that they can be controlled independently
 		/*****************************************ONE OF THESE WILL HAVE TO BE NEGATIVE*****************************************/
-		leftClaw.Set(-clawMove);
-		rightClaw.Set(clawMove);
+		leftClaw.Set(clawMoveLeft);
+		rightClaw.Set(clawMoveRight);
 
 	}
 
