@@ -52,6 +52,8 @@ class Robot: public IterativeRobot
 	Encoder *leftEnc = new Encoder(0,1, false, Encoder::EncodingType::k4X);
 	Encoder *rightEnc = new Encoder(0,1, false, Encoder::EncodingType::k4X);
 
+	float correction = 1;
+
 public:
 	Robot() :
 
@@ -417,7 +419,9 @@ private:
 		double rateLeft = leftEnc->GetRate();
 		double rateRight = rightEnc->GetRate();
 
-		clawMoveLeft = clawMoveLeft/rateLeft*rateRight;
+		correction = correction*rateRight/rateLeft;
+
+		clawMoveLeft = clawMoveLeft*correction;
 
 		if(stringMech != 0){
 			driveLeft = 0;
