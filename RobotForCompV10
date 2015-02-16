@@ -25,7 +25,8 @@ class Robot: public IterativeRobot
 	CANTalon backRightDrive;
 
 	//motor for string mechanism
-	CANTalon stringMotor;
+	CANTalon stringMotorLeft;
+	CANTalon stringMotorRight;
 
 	//list of motors on claws of doom
 	CANTalon leftClaw;
@@ -55,7 +56,8 @@ public:
 		backLeftDrive(57),
 		backRightDrive(53),
 
-		stringMotor(58),
+		stringMotorLeft(58),
+		stringMotorRight(59),
 
 		leftClaw(51),
 		rightClaw(57),
@@ -103,9 +105,7 @@ private:
 		else if (autonomousSwitch1->Get() == 1 && autonomousSwitch2->Get() == 0){
 			functionNumber = 4;
 		}
-		else {
-			functionNumber = 0;
-		}
+
 	}
 
 	void AutonomousPeriodic()
@@ -144,7 +144,7 @@ private:
 				autoLoopCounter++;
 			}
 			//drive forward
-			else if (autoLoopCounter >= claws && autoLoopCounter < driveForwardShort){
+			else if (autoLoopCounter >= claws && autoLoopCounter < (claws+driveForwardShort)){
 				leftClaw.Set(0);
 				rightClaw.Set(0);
 				frontLeftDrive.Set(-.25);
@@ -154,7 +154,7 @@ private:
 				autoLoopCounter++;
 			}
 			//move down over second item
-			else if (autoLoopCounter >= driveForwardShort && autoLoopCounter < claws){
+			else if (autoLoopCounter >= (claws+driveForwardShort) && autoLoopCounter < (claws+driveForwardShort+claws)){
 				leftClaw.Set(.25);
 				rightClaw.Set(.25);
 				frontLeftDrive.Set(0);
@@ -164,7 +164,7 @@ private:
 				autoLoopCounter++;
 			}
 			//pick up tote
-			else if (autoLoopCounter >= claws && autoLoopCounter < claws){
+			else if (autoLoopCounter >= (claws+driveForwardShort+claws) && autoLoopCounter < (claws+driveForwardShort+claws+claws)){
 				leftClaw.Set(-.25);
 				rightClaw.Set(-.25);
 				frontLeftDrive.Set(0);
@@ -174,7 +174,7 @@ private:
 				autoLoopCounter++;
 			}
 			//pivot
-			else if (autoLoopCounter >= claws && autoLoopCounter < pivotLeft){
+			else if (autoLoopCounter >= (claws+driveForwardShort+claws+claws) && autoLoopCounter < (claws+driveForwardShort+claws+claws+pivotLeft)){
 				leftClaw.Set(0);
 				rightClaw.Set(0);
 				frontLeftDrive.Set(-.25);
@@ -184,7 +184,7 @@ private:
 				autoLoopCounter++;
 			}
 			//drive forward
-			else if (autoLoopCounter >= pivotLeft && autoLoopCounter <driveForwardLong){
+			else if (autoLoopCounter >= (claws+driveForwardShort+claws+claws+pivotLeft) && autoLoopCounter < (claws+driveForwardShort+claws+claws+pivotLeft+driveForwardLong)){
 				leftClaw.Set(0);
 				rightClaw.Set(0);
 				frontLeftDrive.Set(-.25);
@@ -194,7 +194,7 @@ private:
 				autoLoopCounter++;
 			}
 			//drop stuff
-			else if (autoLoopCounter >= driveForwardLong && autoLoopCounter < claws){
+			else if (autoLoopCounter >= (claws+driveForwardShort+claws+claws+pivotLeft+driveForwardLong) && autoLoopCounter < (claws+driveForwardShort+claws+claws+pivotLeft+driveForwardLong+claws)){
 				leftClaw.Set(.25);
 				rightClaw.Set(.25);
 				frontLeftDrive.Set(0);
@@ -227,18 +227,8 @@ private:
 				backRightDrive.Set(0);
 				autoLoopCounter++;
 			}
-			//pick up
-			else if (autoLoopCounter >= claws && autoLoopCounter < claws){
-				leftClaw.Set(-.25);
-				rightClaw.Set(-.25);
-				frontLeftDrive.Set(0);
-				frontRightDrive.Set(0);
-				backLeftDrive.Set(0);
-				backRightDrive.Set(0);
-				autoLoopCounter++;
-			}
 			//pivot
-			else if (autoLoopCounter >= claws && autoLoopCounter < pivotLeft){
+			else if (autoLoopCounter >= claws && autoLoopCounter < (claws+pivotLeft)){
 				leftClaw.Set(0);
 				rightClaw.Set(0);
 				frontLeftDrive.Set(.25);
@@ -248,7 +238,7 @@ private:
 				autoLoopCounter++;
 			}
 			//drive forward
-			else if (autoLoopCounter >= pivotLeft && autoLoopCounter < driveForwardLong){
+			else if (autoLoopCounter >= (claws+pivotLeft) && autoLoopCounter < (claws+pivotLeft+driveForwardLong)){
 				leftClaw.Set(0);
 				rightClaw.Set(0);
 				frontLeftDrive.Set(-.25);
@@ -258,7 +248,7 @@ private:
 				autoLoopCounter++;
 			}
 			//drop stuff
-			else if (autoLoopCounter >= driveForwardLong && autoLoopCounter < claws){
+			else if (autoLoopCounter >= (claws+pivotLeft+driveForwardLong) && autoLoopCounter < (claws+pivotLeft+driveForwardLong+claws)){
 				leftClaw.Set(.25);
 				rightClaw.Set(.25);
 				frontLeftDrive.Set(0);
@@ -290,7 +280,7 @@ private:
 				backRightDrive.Set(0);
 				autoLoopCounter++;
 			}
-			else if (autoLoopCounter >= claws && autoLoopCounter < pivotRight){
+			else if (autoLoopCounter >= claws && autoLoopCounter < (claws+pivotRight)){
 				leftClaw.Set(0);
 				rightClaw.Set(0);
 				frontLeftDrive.Set(-.25);
@@ -300,7 +290,7 @@ private:
 				autoLoopCounter++;
 			}
 			//drive forward
-			else if (autoLoopCounter >= pivotRight && autoLoopCounter < driveForwardLong){
+			else if (autoLoopCounter >= (claws+pivotRight) && autoLoopCounter < (claws+pivotRight+driveForwardLong)){
 				leftClaw.Set(0);
 				rightClaw.Set(0);
 				frontLeftDrive.Set(-.25);
@@ -310,7 +300,7 @@ private:
 				autoLoopCounter++;
 			}
 			//drop stuff
-			else if (autoLoopCounter >= driveForwardLong && autoLoopCounter < claws){
+			else if (autoLoopCounter >= (claws+pivotRight+driveForwardLong) && autoLoopCounter < (claws+pivotRight+driveForwardLong+claws)){
 				leftClaw.Set(.25);
 				rightClaw.Set(.25);
 				frontLeftDrive.Set(0);
@@ -329,15 +319,6 @@ private:
 				backRightDrive.Set(0);
 				autoLoopCounter++;
 			}
-		}
-		else if (functionNumber == 0) {
-			leftClaw.Set(0);
-			rightClaw.Set(0);
-			frontLeftDrive.Set(0);
-			frontRightDrive.Set(0);
-			backLeftDrive.Set(0);
-			backRightDrive.Set(0);
-			autoLoopCounter++;
 		}
 	}
 
@@ -418,6 +399,10 @@ private:
 			Wait(0.005);
 		}
 */
+		if(stringMech != 0){
+			driveLeft = 0;
+			driveRight = 0;
+		}
 
 		//individually set all the motors with values because we do not have chains so we can't use the tank drive functions
 		frontLeftDrive.Set(-driveLeft);
@@ -425,8 +410,11 @@ private:
 		backLeftDrive.Set(driveLeft);
 		backRightDrive.Set(-driveRight);
 
+
+
 		//sets value of string motor
-		stringMotor.Set(stringMech);
+		stringMotorLeft.Set(stringMech);
+		stringMotorRight.Set(-stringMech);
 
 		leftClaw.Set(-clawMoveLeft);
 		rightClaw.Set(-clawMoveRight);
