@@ -150,7 +150,7 @@ private:
 		else if (functionNumber == 2){
 			/********************************SECOND FUNCTION**********************************************/
 			//pick up tote and bin
-			//pick up
+			//pick up bin
 			if (autoLoopCounter < highClaws){
 				leftClaw.Set(-.5);
 				rightClaw.Set(-.5);
@@ -166,7 +166,7 @@ private:
 					rightClaw.Set(0);
 				}
 			}
-			//drive forward
+			//drive forward to pick up tote
 			else if (autoLoopCounter >= highClaws && autoLoopCounter < (highClaws+driveForwardShort)){
 				leftClaw.Set(0);
 				rightClaw.Set(0);
@@ -176,7 +176,7 @@ private:
 				backRightDrive.Set(-.5);
 				autoLoopCounter++;
 			}
-			//move down over second item
+			//move down over tote
 			else if (autoLoopCounter >= (highClaws+driveForwardShort) && autoLoopCounter < (highClaws+driveForwardShort+highClaws)){
 				leftClaw.Set(.5);
 				rightClaw.Set(.5);
@@ -196,7 +196,7 @@ private:
 				backRightDrive.Set(0);
 				autoLoopCounter++;
 			}
-			//pivot
+			//pivot to face auto zone head on
 			else if (autoLoopCounter >= (highClaws+driveForwardShort+highClaws+claws) && autoLoopCounter < (highClaws+driveForwardShort+highClaws+claws+pivotLeft)){
 				leftClaw.Set(0);
 				rightClaw.Set(0);
@@ -206,7 +206,7 @@ private:
 				backRightDrive.Set(-.5);
 				autoLoopCounter++;
 			}
-			//drive forward
+			//drive forward into auto zone
 			else if (autoLoopCounter >= (highClaws+driveForwardShort+highClaws+claws+pivotLeft) && autoLoopCounter < (highClaws+driveForwardShort+highClaws+claws+pivotLeft+driveForwardLong)){
 				leftClaw.Set(0);
 				rightClaw.Set(0);
@@ -216,7 +216,7 @@ private:
 				backRightDrive.Set(-.33);
 				autoLoopCounter++;
 			}
-			//drop stuff
+			//lower claws
 			else if (autoLoopCounter >= (highClaws+driveForwardShort+highClaws+claws+pivotLeft+driveForwardLong) && autoLoopCounter < (highClaws+driveForwardShort+highClaws+claws+pivotLeft+driveForwardLong+claws)){
 				leftClaw.Set(.5);
 				rightClaw.Set(.5);
@@ -226,7 +226,7 @@ private:
 				backRightDrive.Set(0);
 				autoLoopCounter++;
 			}
-			//sit still
+			//sit still for the rest of the autonomous period
 			else {
 				leftClaw.Set(0);
 				rightClaw.Set(0);
@@ -241,6 +241,7 @@ private:
 
 			/***************************************THIRD FUNCTION**********************************************/
 			//pick up tote and bring to auto zone
+			//pick up tote
 			if (autoLoopCounter < claws){
 				leftClaw.Set(.5);
 				rightClaw.Set(.5);
@@ -250,7 +251,7 @@ private:
 				backRightDrive.Set(0);
 				autoLoopCounter++;
 			}
-			//pivot
+			//pivot to face auto zone
 			else if (autoLoopCounter >= claws && autoLoopCounter < (claws+pivotLeft)){
 				leftClaw.Set(0);
 				rightClaw.Set(0);
@@ -260,7 +261,7 @@ private:
 				backRightDrive.Set(.5);
 				autoLoopCounter++;
 			}
-			//drive forward
+			//drive forward into auto zone
 			else if (autoLoopCounter >= (claws+pivotLeft) && autoLoopCounter < (claws+pivotLeft+driveForwardLong)){
 				leftClaw.Set(0);
 				rightClaw.Set(0);
@@ -270,7 +271,7 @@ private:
 				backRightDrive.Set(-.5);
 				autoLoopCounter++;
 			}
-			//drop stuff
+			//lower claws
 			else if (autoLoopCounter >= (claws+pivotLeft+driveForwardLong) && autoLoopCounter < (claws+pivotLeft+driveForwardLong+claws)){
 				leftClaw.Set(.5);
 				rightClaw.Set(.5);
@@ -280,7 +281,7 @@ private:
 				backRightDrive.Set(0);
 				autoLoopCounter++;
 			}
-			//sit still
+			//wait until the end of the autonomous period
 			else {
 				leftClaw.Set(0);
 				rightClaw.Set(0);
@@ -294,6 +295,7 @@ private:
 		else if (functionNumber == 4){
 				/***************************************FOURTH FUNCTION**********************************************/
 			//pick up bin and bring to auto zone
+			//pick up bin
 			if (autoLoopCounter < claws){
 				leftClaw.Set(-.5);
 				rightClaw.Set(-.5);
@@ -303,7 +305,7 @@ private:
 				backRightDrive.Set(0);
 				autoLoopCounter++;
 			}
-			//pivot
+			//pivot to face auto zone
 			else if (autoLoopCounter >= claws && autoLoopCounter < (claws+pivotRight)){
 				leftClaw.Set(0);
 				rightClaw.Set(0);
@@ -313,7 +315,7 @@ private:
 				backRightDrive.Set(-.5);
 				autoLoopCounter++;
 			}
-			//drive forward
+			//drive forward into auto zone
 			else if (autoLoopCounter >= (claws+pivotRight) && autoLoopCounter < (claws+pivotRight+driveForwardLong)){
 				leftClaw.Set(0);
 				rightClaw.Set(0);
@@ -323,7 +325,7 @@ private:
 				backRightDrive.Set(-.5);
 				autoLoopCounter++;
 			}
-			//drop stuff
+			//lower claws
 			else if (autoLoopCounter >= (claws+pivotRight+driveForwardLong) && autoLoopCounter < (claws+pivotRight+driveForwardLong+claws)){
 				leftClaw.Set(.5);
 				rightClaw.Set(.5);
@@ -333,7 +335,7 @@ private:
 				backRightDrive.Set(0);
 				autoLoopCounter++;
 			}
-			//sit still
+			//wait until the end of the auto period
 			else {
 				leftClaw.Set(0);
 				rightClaw.Set(0);
@@ -353,11 +355,16 @@ private:
 
 	void TeleopPeriodic()
 	{
+		//speed to move string motor
 		float stringMech;
+		//boolean to allow the two claw motors to be synchronized
 		bool motorInd = buttonStick.GetRawButton(5);
+		//axes that determine the speed of the string motor
 		float stringPusher = buttonStick.GetRawAxis(2);
 		float stringReturn = buttonStick.GetRawAxis(3);
+		//sets the string return value to a negative number
 		stringReturn = -stringReturn;
+		//determines whether to move the string motor in or out
 		if (buttonStick.GetRawAxis(2)){
 			stringMech = stringPusher;		}
 		else if (buttonStick.GetRawAxis(3)){
@@ -378,7 +385,7 @@ private:
 		float clawMoveRight = buttonStick.GetRawAxis(5);
 		float clawMoveLeft = buttonStick.GetRawAxis(1);
 
-
+		//has the motors move together in a synchronized manner
 		if (motorInd){
 			clawMoveLeft = clawMoveRight;
 		}
@@ -404,8 +411,8 @@ private:
 		}
 /*		else if (bottomLeftSwitch->Get() == 0 && clawMoveLeft > 0){
 			clawMoveLeft = 0;
-		}
-*/		if (topRightSwitch->Get() == 0 && clawMoveRight < 0) {
+		}*/
+		if (topRightSwitch->Get() == 0 && clawMoveRight < 0) {
 			clawMoveRight = 0;
 			rightEnc->Reset();
 		}
@@ -418,16 +425,17 @@ private:
 			driveRight = 0;
 		}
 
+		//allows us to sense the rate that the encoders are sensing that the ball screw is moving at
 		double rateLeft = leftEnc->GetRate();
 		double rateRight = rightEnc->GetRate();
 
+		//creates a correction factor that makes sure that each motor controlling the ball screws are receiving values that will proportionately make them move at the same speeds
 		if (clawMoveLeft != 0 && clawMoveRight != 0){
 		correction = correction*rateRight/rateLeft;
 		clawMoveLeft = clawMoveLeft*correction;
 		}
-		
-		
 
+		//a safety mechanism that will stop the driver from having control of the motors if we are running the string mechanism
 		if(stringMech != 0){
 			driveLeft = 0;
 			driveRight = 0;
@@ -439,27 +447,25 @@ private:
 		backLeftDrive.Set(-driveLeft);
 		backRightDrive.Set(-driveRight);
 
-
-
 		//sets value of string motor
 //		stringMotorLeft.Set(stringMech);
 		stringMotorRight.Set(-stringMech);
 
+		//booleans that allow us to control the ball screw claws to go faster or slower on command
 		bool slowClaw = buttonStick.GetRawButton(6);
 		bool fastClawRight = buttonStick.GetRawButton(10);
 		bool fastClawLeft = buttonStick.GetRawButton(9);
+		//an in statement that controls the booleans above
 		if (slowClaw){
 			clawMoveLeft = clawMoveLeft/2;
 			clawMoveRight = clawMoveRight/2;
 		}
-		if(fastClawRight){
+		else if(fastClawRight && fastClawLeft){
 			clawMoveRight = clawMoveRight*2;
-		}
-		if(fastClawLeft){
 			clawMoveLeft = clawMoveLeft*2;
 		}
 
-
+		//sets the values of the claw motors independently so they can be run at different values if the driver chooses to do that
 		leftClaw.Set(-clawMoveLeft*.5);
 		rightClaw.Set(-clawMoveRight*.5);
 
