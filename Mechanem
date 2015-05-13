@@ -1,4 +1,6 @@
 #include "WPILib.h"
+#include <algorithm>
+using namespace std;
 
 class Robot: public IterativeRobot
 {
@@ -61,6 +63,13 @@ private:
 		float frontRight = r+y+x;
 		float backLeft = r-y-x;
 		float backRight = r+y-x;
+		// normalize wheel throttles
+  		float maximum = max(max(abs(lf), abs(rf)), max(abs(lr), abs(rr)));
+		if (maximum > 1.0) {
+    			lf = (lf / maximum);
+    			rf = (rf / maximum);
+    			lr = (lr / maximum);
+    			rr = (rr / maximum);}
 		FL.Set(frontLeft);
 		FR.Set(frontRight);
 		BL.Set(backLeft);
