@@ -1,0 +1,76 @@
+#include "WPILib.h"
+
+class Robot: public IterativeRobot
+{
+	CANTalon FL;
+	CANTalon FR;
+	CANTalon BL;
+	CANTalon BR;
+	RobotDrive myRobot; // robot drive system
+	Joystick stick; // only joystick
+	LiveWindow *lw;
+	int autoLoopCounter;
+
+public:
+	Robot() :
+		FL(),
+		FR(),
+		BL(),
+		BR(),
+		myRobot(0, 1),	// these must be initialized in the same order
+		stick(0),		// as they are declared above.
+		lw(NULL),
+		autoLoopCounter(0)
+	{
+		myRobot.SetExpiration(0.1);
+	}
+
+private:
+	void RobotInit()
+	{
+		lw = LiveWindow::GetInstance();
+	}
+
+	void AutonomousInit()
+	{
+		autoLoopCounter = 0;
+	}
+
+	void AutonomousPeriodic()
+	{
+		if(autoLoopCounter < 100) //Check if we've completed 100 loops (approximately 2 seconds)
+		{
+			myRobot.Drive(-0.5, 0.0); 	// drive forwards half speed
+			autoLoopCounter++;
+			} else {
+			myRobot.Drive(0.0, 0.0); 	// stop robot
+		}
+	}
+
+	void TeleopInit()
+	{
+
+	}
+
+	void TeleopPeriodic()
+	{
+		float y = stick.GetRawAxis(3);
+		float x = stick.GetRawAxis(2);
+		float r = stick.GetRawAxis(0);
+		float frontLeft = r-y+x;
+		float frontRight = r+y+x;
+		float backLeft = r-y-x;
+		float backRight = r+y-x;
+		FL.Set(frontLeft);
+		FR.Set(frontRight);
+		BL.Set(backLeft);
+		BR.Set(backRight);
+	}
+
+	void TestPeriodic()
+	{
+		lw->Run();
+	}
+};
+
+START_ROBOT_CLASS(Robot);
